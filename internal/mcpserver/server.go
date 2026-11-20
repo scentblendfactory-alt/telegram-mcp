@@ -56,10 +56,11 @@ type ReadChatInput struct {
 }
 
 type SendMessageInput struct {
-	ChatID   int64  `json:"chat_id"            jsonschema:"id from list_chats"`
-	ChatType string `json:"chat_type"          jsonschema:"private, group, supergroup or channel"`
-	Text     string `json:"text"               jsonschema:"message text in Markdown"`
-	ReplyTo  int    `json:"reply_to,omitempty" jsonschema:"id of the message to reply to"`
+	ChatID       int64  `json:"chat_id"            jsonschema:"id from list_chats"`
+	ChatType     string `json:"chat_type"          jsonschema:"private, group, supergroup or channel"`
+	Text         string `json:"text"               jsonschema:"message text in Markdown"`
+	ReplyTo      int    `json:"reply_to,omitempty" jsonschema:"id of the message to reply to"`
+	ScheduleDate int64  `json:"schedule_date,omitempty" jsonschema:"optional unix seconds in the future; Telegram holds the message and delivers it then (up to 365 days ahead)"`
 }
 
 type ListParticipantsInput struct {
@@ -208,10 +209,11 @@ func sendMessageHandler(t Telegram) mcp.ToolHandlerFor[SendMessageInput, *tg.Sen
 			return nil, nil, errors.New("text is required")
 		}
 		res, err := t.SendMessage(ctx, tg.SendMessageParams{
-			ChatID:   in.ChatID,
-			ChatType: chatType,
-			Text:     in.Text,
-			ReplyTo:  in.ReplyTo,
+			ChatID:       in.ChatID,
+			ChatType:     chatType,
+			Text:         in.Text,
+			ReplyTo:      in.ReplyTo,
+			ScheduleDate: in.ScheduleDate,
 		})
 		if err != nil {
 			return nil, nil, err

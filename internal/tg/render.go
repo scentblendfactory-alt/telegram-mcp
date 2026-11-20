@@ -141,10 +141,11 @@ func RenderMessage(mc tgapi.MessageClass, names *Names, peerTitle string) (Messa
 	switch m := mc.(type) {
 	case *tgapi.Message:
 		return Message{
-			ID:   m.ID,
-			Date: int64(m.Date),
-			From: sender(m.Out, m.FromID, m.PostAuthor, names, peerTitle),
-			Text: RenderText(m),
+			ID:      m.ID,
+			Date:    int64(m.Date),
+			From:    sender(m.Out, m.FromID, m.PostAuthor, names, peerTitle),
+			Text:    RenderText(m),
+			ReplyTo: replyToID(m),
 		}, true
 	case *tgapi.MessageService:
 		return Message{
@@ -167,4 +168,16 @@ func sender(out bool, from tgapi.PeerClass, postAuthor string, names *Names, pee
 		return postAuthor
 	}
 	return peerTitle
+}
+
+// replyToID returns the id of the message m replies to, or 0.
+func replyToID(m *tgapi.Message) int {
+	if h, ok := m.GetReplyTo(); ok {
+		if r, ok := h.(*tgapi.MessageReplyHeader); ok {
+			if id, ok := r.GetReplyToMsgID(); ok {
+				return id
+			}
+		}
+	}
+	return 0
 }

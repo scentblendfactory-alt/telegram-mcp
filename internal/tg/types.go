@@ -35,10 +35,11 @@ type Chat struct {
 }
 
 type Message struct {
-	ID   int    `json:"id"`
-	Date int64  `json:"date"`
-	From string `json:"from"`
-	Text string `json:"text"`
+	ID      int    `json:"id"`
+	Date    int64  `json:"date"`
+	From    string `json:"from"`
+	Text    string `json:"text"`
+	ReplyTo int    `json:"reply_to,omitempty"`
 }
 
 type ListChatsParams struct {
@@ -66,10 +67,11 @@ type ReadChatResult struct {
 }
 
 type SendMessageParams struct {
-	ChatID   int64
-	ChatType ChatType
-	Text     string // Markdown
-	ReplyTo  int    // message id to reply to; 0 for none
+	ChatID       int64
+	ChatType     ChatType
+	Text         string // Markdown
+	ReplyTo      int    // message id to reply to; 0 for none
+	ScheduleDate int64  // unix seconds; 0 sends now, otherwise Telegram holds it as a scheduled message
 }
 
 type SendFileParams struct {
@@ -85,8 +87,9 @@ type SendFileParams struct {
 type SendFileResult = SendMessageResult
 
 type SendMessageResult struct {
-	ID   int   `json:"id"`
-	Date int64 `json:"date"`
+	ID        int   `json:"id"`
+	Date      int64 `json:"date"`
+	Scheduled bool  `json:"scheduled,omitempty"`
 }
 
 type DownloadMediaParams struct {

@@ -96,8 +96,8 @@ type DownloadMediaParams struct {
 }
 
 type DownloadMediaResult struct {
-	Path     string `json:"path"`                // absolute
-	Kind     string `json:"kind"`                // voice, audio, video, video_note, photo, document, sticker, gif
+	Path     string `json:"path"` // absolute
+	Kind     string `json:"kind"` // voice, audio, video, video_note, photo, document, sticker, gif
 	MimeType string `json:"mime_type"`
 	Size     int64  `json:"size"`                // bytes on disk
 	FileName string `json:"file_name,omitempty"` // original name, if the document has one

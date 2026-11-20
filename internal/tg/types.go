@@ -86,8 +86,12 @@ type SendFileParams struct {
 // SendFileResult has the same JSON shape as SendMessageResult.
 type SendFileResult = SendMessageResult
 
+// SendMessageResult is the sent message. For a scheduled message, ID is a
+// scheduled-message id: read_chat does not show it and reply_to cannot use
+// it, because Telegram gives the message a new id when it is sent. ID is
+// omitted if Telegram did not return it.
 type SendMessageResult struct {
-	ID        int   `json:"id"`
+	ID        int   `json:"id,omitempty"`
 	Date      int64 `json:"date"`
 	Scheduled bool  `json:"scheduled,omitempty"`
 }

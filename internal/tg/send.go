@@ -46,6 +46,8 @@ func (s *Service) SendMessage(ctx context.Context, p SendMessageParams) (*SendMe
 		if m := scheduledMessage(upd); m != nil {
 			return &SendMessageResult{ID: m.ID, Date: int64(m.Date), Scheduled: true}, nil
 		}
+		// Telegram accepted the message but the reply has no copy of it.
+		// Do not fail: a retry would schedule it twice. Leave id out.
 		return &SendMessageResult{Date: p.ScheduleDate, Scheduled: true}, nil
 	}
 
